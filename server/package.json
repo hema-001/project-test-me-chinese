@@ -1,0 +1,26 @@
+{
+    "name": "server",
+    "version": "0.0.1",
+    "description": "server",
+    "main": "server.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node server.js",
+        "dev": "nodemon server.js"
+    },
+    "author": "Ibrahim M.I. Ismail (乐心)",
+    "license": "ISC",
+    "dependencies": {
+        "body-parser": "^1.18.3",
+        "express": "^4.16.3",
+        "mongoose": "^5.3.7",
+        "nodemon": "^1.18.4",
+        "dotenv": "^8.2.0"
+    },
+    "devDependencies": {
+        "nodemon": "2.0.20",
+        "eslint": "^5.6.0",
+        "eslint-config-airbnb-base": "^13.1.0",
+        "eslint-plugin-import": "^2.14.0"
+    }
+}
