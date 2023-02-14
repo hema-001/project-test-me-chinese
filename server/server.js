@@ -1,24 +1,85 @@
-// Import express and create express server on port "PORT" (default 3000) fetched from .env file
-require("dotenv").config();
-const server = require("./express");
-// import mongoose and connect to mongodb database fetched from .env file
-const mongoose = require("mongoose");
-const app = server();
-const PORT = process.env.PORT || 3000;
+const express = require("express");
+const cors = require("cors");
+const dbConfig = require("./config/db.config");
 
-// connecte to mongodb database and handle errors
-mongoose.connect(process.env.MONGODB_URI, { 
-    useNewUrlParser: true, 
-    useUnifiedTopology: true, 
-    useFindAndModify: false, 
-    useCreateIndex: true 
-}).then(() => {
-    console.log("Connected to database");
-}).catch((err) => {
-    console.log("Error connecting to database", err);
+const app = express();
+
+var corsOptions = {
+  origin: "http://localhost:8081"
+};
+
+app.use(cors(corsOptions));
+
+// parse requests of content-type - application/json
+app.use(express.json());
+
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(express.urlencoded({ extended: true }));
+
+const db = require("./models");
+const Role = db.role;
+
+db.mongoose
+  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
+  .then(() => {
+    console.log("Successfully connect to MongoDB.");
+    initial();
+  })
+  .catch(err => {
+    console.error("Connection error", err);
+    process.exit();
+  });
+
+// simple route
+app.get("/", (req, res) => {
+  res.json({ message: "Welcome to testmecn application." });
 });
 
-// Start express server
+// routes
+require("./routes/auth.routes")(app);
+require("./routes/user.routes")(app);
+
+// set port, listen for requests
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-    console.log("Server started on port", PORT);
-}); 
+  console.log(`Server is running on port ${PORT}.`);
+});
+
+function initial() {
+  Role.estimatedDocumentCount((err, count) => {
+    if (!err && count === 0) {
+      new Role({
+        name: "user"
+      }).save(err => {
+        if (err) {
+          console.log("error", err);
+        }
+
+        console.log("added 'user' to roles collection");
+      });
+
+      new Role({
+        name: "moderator"
+      }).save(err => {
+        if (err) {
+          console.log("error", err);
+        }
+
+        console.log("added 'moderator' to roles collection");
+      });
+
+      new Role({
+        name: "admin"
+      }).save(err => {
+        if (err) {
+          console.log("error", err);
+        }
+
+        console.log("added 'admin' to roles collection");
+      });
+    }
+  });
+}
