@@ -1,28 +1,18 @@
-const { authJwt } = require("../middlewares");
-const controller = require("../controllers/user.controller");
+const express = require('express');
+const userCtrl = require('../controllers/user.controller');
+const authCtrl = require('../controllers/auth.controller');
 
-module.exports = function(app) {
-  app.use(function(req, res, next) {
-    res.header(
-      "Access-Control-Allow-Headers",
-      "x-access-token, Origin, Content-Type, Accept"
-    );
-    next();
-  });
+const router = express.Router();
 
-  app.get("/api/test/all", controller.allAccess);
+router.route('/api/users')
+    .get(userCtrl.list)
+    .post(userCtrl.create);
 
-  app.get("/api/test/user", [authJwt.verifyToken], controller.userBoard);
+router.route('/api/users/:userId')
+    .get(authCtrl.requireSignin, userCtrl.read)
+    .put(authCtrl.requireSignin, authCtrl.isAuth, userCtrl.update)
+    .delete(authCtrl.requireSignin, authCtrl.isAuth, userCtrl.remove);
 
-  app.get(
-    "/api/test/mod",
-    [authJwt.verifyToken, authJwt.isModerator],
-    controller.moderatorBoard
-  );
+router.param('userId', userCtrl.userById);
 
-  app.get(
-    "/api/test/admin",
-    [authJwt.verifyToken, authJwt.isAdmin],
-    controller.adminBoard
-  );
-};
+module.exports = router;
