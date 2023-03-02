@@ -17,9 +17,17 @@ import {
 } from 'mdb-react-ui-kit';
 import { Link } from 'react-router-dom';
 import { Links } from '../links/links';
+import { useAuthContext } from '../hooks/useAuthContext';
+import { useSignout } from '../hooks/useSignout';
 
 export default function NavBar() {
     const [showNavRight, setShowNavRight] = useState(false);
+    const { user } = useAuthContext();
+    const { signout } = useSignout();
+
+    const handleLogout = () => {
+        signout();
+    };
   return (
       <>
           <MDBNavbar expand='lg' dark bgColor='dark' className='shadow-5'>
@@ -68,13 +76,16 @@ export default function NavBar() {
                               </MDBDropdown>
                           </MDBNavbarItem>
                       </MDBNavbarNav>
-                      <div className='navbar-text'>
-                        <Link to={Links.SignInPage.path} style={{paddingRight: "20px"}}>
-                            <MDBBtn outline color='light' rippleColor='primary' size='sm'>
-                                Sign In
-                            </MDBBtn>
-                        </Link>
-                      </div>
+                      {user === null ? (<div className='navbar-text'>
+                          <Link to={Links.SignInPage.path} style={{ paddingRight: "20px" }}>
+                              <MDBBtn outline color='light' rippleColor='primary' size='sm'>
+                                  Sign In
+                              </MDBBtn>
+                          </Link></div>) : (<div className='navbar-text' style={{width: "100px"}}>
+                              <MDBBtn outline color='light' rippleColor='primary' size='sm'
+                              onClick={handleLogout}>
+                                  Sign Out
+                              </MDBBtn></div>)}
                   </MDBCollapse>
               </MDBContainer>
           </MDBNavbar>

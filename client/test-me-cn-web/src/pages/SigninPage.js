@@ -18,9 +18,9 @@ export default function SigninPage() {
     };
   return (
     <div>
-        <MDBRow className='justify-content-center' style={{marginBottom: "5rem"}}>
+        <MDBRow className='justify-content-center mt-4' style={{marginBottom: "5rem"}}>
             <MDBCol md={8}>
-            <MDBTabs pills justify className='mb-3'>
+            <MDBTabs pills justify className='mt-4'>
         <MDBTabsItem>
           <MDBTabsLink 
             color='dark'
@@ -42,9 +42,9 @@ export default function SigninPage() {
           </MDBTabsLink>
         </MDBTabsItem>
       </MDBTabs>
-                <MDBTabsContent>
+                <MDBTabsContent className='mb-8'>
                      <SigninForm loginRegisterActive={loginRegisterActive} />
-                     <SignupForm loginRegisterActive={loginRegisterActive} />
+                     <SignupForm loginRegisterActive={loginRegisterActive} setLoginRegisterActive={setLoginRegisterActive} />
                 </MDBTabsContent>
             </MDBCol>
         </MDBRow>

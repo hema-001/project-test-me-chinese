@@ -4,7 +4,7 @@ const User = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const expressJwt = require('express-jwt');
 const _ = require('lodash');
-const { errorHandler } = require('../helpers/dbErrorHandler');
+const getErrorMessage = require('../helpers/dbErrorHandler');
 
 const create = async (req, res) => {
     const user = new User(req.body);
@@ -15,7 +15,7 @@ const create = async (req, res) => {
         });
     } catch (err) {
         return res.status(400).json({
-            error: errorHandler(err),
+            error: getErrorMessage(err),
         });
     }
 };
@@ -54,7 +54,7 @@ const update = async (req, res) => {
         return res.json(user);
     } catch (err) {
         return res.status(400).json({
-            error: errorHandler(err),
+            error: getErrorMessage(err),
         });
     }
 };
@@ -68,7 +68,7 @@ const remove = async (req, res) => {
         return res.json(deletedUser);
     } catch (err) {
         return res.status(400).json({
-            error: errorHandler(err),
+            error: getErrorMessage(err),
         });
     }
 };
@@ -79,7 +79,7 @@ const list = async (req, res) => {
         return res.json(users);
     } catch (err) {
         return res.status(400).json({
-            error: errorHandler(err),
+            error: getErrorMessage(err),
         });
     }
 };
